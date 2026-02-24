@@ -8,5 +8,9 @@ license: other: proprietary
 description-file: README.md
 url: https://github.com/SpeyTech/certifiable-inference
 package-url: https://github.com/SpeyTech/certifiable-inference
+build-error-email: william@fstopify.com
+builds: default
+builds: -windows
+builds: -binddist
 requires: * build2 >= 0.16.0
 requires: * bpkg >= 0.16.0
