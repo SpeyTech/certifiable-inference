@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    uses: vivarium-ai/certifiable-github/.github/workflows/ci.yml@master
+    with:
+      build-target: certifiable-inference
+
+  tt-build:
+    uses: vivarium-ai/certifiable-github/.github/workflows/tt-ci.yml@master
+    with:
+      build-target: certifiable-inference
+      tt_dev_image: ghcr.io/tenstorrent/tt-metal/tt-metalium/ubuntu-22.04-dev-amd64:d6958801d86fe1e20a07f2be7795fac0b2c9b211
