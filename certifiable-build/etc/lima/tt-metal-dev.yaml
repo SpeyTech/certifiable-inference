@@ -1,0 +1,21 @@
+# certifiable-build/etc/lima/tt-metal-dev.yaml
+vmType: "qemu"
+arch: "x86_64"
+plain: true
+base:
+  - template://_images/ubuntu
+images:
+  - location: "ghcr.io/tenstorrent/tt-metal/tt-metalium/ubuntu-22.04-dev-amd64:d6958801d86fe1e20a07f2be7795fac0b2c9b211"
+    arch: x86_64
+
+cpus: 8
+memory: "16GiB"
+disk: "80GiB"
+
+mounts:
+  - location: "~"
+    writable: true
+
+containerd:
+  system: false
+  user: false
