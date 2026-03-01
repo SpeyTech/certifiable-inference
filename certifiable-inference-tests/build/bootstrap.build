@@ -1,7 +1,7 @@
-project = certifiable-inference
+project = certifiable-inference-tests
 
 using version
 using config
 using test
-using dist
 using install
+using dist

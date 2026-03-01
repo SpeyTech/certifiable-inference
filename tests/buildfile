@@ -1,4 +1,0 @@
-import unit = unit/
-import benchmarks = benchmarks/
-
-./: unit/ benchmarks/

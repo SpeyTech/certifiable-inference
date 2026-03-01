@@ -1,5 +1,8 @@
+# Uncomment to suppress warnings coming from external libraries.
+#
+#c.internal.scope = current
+
 using c
-using test
 
 c.std = c99
 c.warnings = all
@@ -11,4 +14,5 @@ if ($c.target.class == 'windows')
 if ($c.id == 'gcc')
   c.coptions += -fanalyzer
 
-c.poptions =+ "-I$src_root/include"
+h{*}: extension = h
+c{*}: extension = c

@@ -1,0 +1,28 @@
+import libs += certifiable-inference%liba{certifiable_inference}
+
+tests = exe{ \
+  test_activations \
+  test_convolution \
+  test_fixed_point \
+  test_hash_basic \
+  test_hash_consistency \
+  test_matrix_reproducibility \
+  test_pooling \
+  }
+
+exe{test_activations}: c{test_activations}
+exe{test_convolution}: c{test_convolution}
+exe{test_fixed_point}: c{test_fixed_point}
+exe{test_hash_basic}:  c{test_hash_basic}
+exe{test_hash_consistency}: c{test_hash_consistency}
+exe{test_matrix_reproducibility}: c{test_matrix_reproducibility}
+exe{test_pooling}: c{test_pooling}
+
+$tests:
+{
+  c.coptions += -UNDEBUG
+  install = false
+  test = true
+}
+
+./: $tests
