@@ -16,3 +16,5 @@ if ($c.id == 'gcc')
 
 h{*}: extension = h
 c{*}: extension = c
+
+exe{*}: test = true

@@ -1,1 +1,14 @@
-./: {*/ -build/} doc{README.md} legal{LICENSE} manifest
+./: liba{certifiable-inference} \
+    doc{README.md} \
+    legal{LICENSE} \
+    manifest
+
+liba{certifiable-inference}: \
+  c{src/**} \
+  h{include/*}
+{
+  dist = true
+  export = true
+}
+
+liba{certifiable-inference}: c.export.poptions = "-I$src_root/include"

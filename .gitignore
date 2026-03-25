@@ -25,24 +25,6 @@
 .DS_Store
 Thumbs.db
 
-# Test outputs
-tests/static/*.txt
-tests/benchmarks/results/
-
-# Build2 symlinks exes from build dir to src dir for convenient
-examples/debug_conv
-examples/debug_pool
-examples/edge_detection
-examples/xor_gate
-tests/benchmarks/test_timing_consistency
-tests/unit/test_activations
-tests/unit/test_convolution
-tests/unit/test_fixed_point
-tests/unit/test_hash_basic
-tests/unit/test_hash_consistency
-tests/unit/test_matrix_reproducibility
-tests/unit/test_pooling
-
 # Temporary files
 *.tmp
 *.log

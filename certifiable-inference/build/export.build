@@ -1,6 +1,6 @@
 $out_root/
 {
-  include include/
+  include ./
 }
 
-export $out_root/src/$import.target
+export $out_root/$import.target

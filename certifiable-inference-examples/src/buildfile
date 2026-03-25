@@ -1,4 +1,4 @@
-import libs += certifiable-inference%liba{certifiable_inference}
+import ci = certifiable-inference%liba{certifiable-inference}
 
 exes = exe{ \
   certifiable_inference_xor_gate \
@@ -7,9 +7,9 @@ exes = exe{ \
   certifiable_inference_debug_pool \
   }
 
-exe{certifiable_inference_xor_gate}: c{xor_gate}
-exe{certifiable_inference_edge_detection}: c{edge_detection}
-exe{certifiable_inference_debug_conv}: c{debug_conv}
-exe{certifiable_inference_debug_pool}: c{debug_pool}
+exe{certifiable_inference_xor_gate}: c{xor_gate} $ci
+exe{certifiable_inference_edge_detection}: c{edge_detection} $ci
+exe{certifiable_inference_debug_conv}: c{debug_conv} $ci
+exe{certifiable_inference_debug_pool}: c{debug_pool} $ci
 
 ./: $exes

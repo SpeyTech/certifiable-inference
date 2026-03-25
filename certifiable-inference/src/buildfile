@@ -1,9 +1,0 @@
-liba{certifiable_inference}: \
-  c{**/**.c} \
-  h{../include/**.h}
-{
-  dist = true
-  export = true
-}
-
-./: liba{certifiable_inference}
