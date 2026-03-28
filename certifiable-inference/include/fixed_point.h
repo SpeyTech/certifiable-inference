@@ -1,90 +1,62 @@
 /**
  * @file fixed_point.h
- * @project Certifiable Inference Engine
- * @brief Deterministic Q16.16 fixed-point arithmetic core.
+ * @brief L2 Fixed-Point Types (L1 Delegation)
  *
- * @details Provides bit-perfect arithmetic operations with overflow
- * protection. Q16.16 format provides a range of -32768 to +32767.99998
- * with a precision of 0.000015 (1/65536).
+ * Copyright (c) 2026 The Murray Family Innovation Trust
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * All operations are deterministic and produce identical results across
- * all platforms (x86, ARM, RISC-V) regardless of floating-point hardware.
+ * DVEC: v1.3
+ * DETERMINISM: D1 — Strict Deterministic
+ * SRS: SRS-005-CR-001 v1.1-Frozen
  *
- * @traceability SRS-003-DETERMINISTIC-MATH
- * @compliance MISRA-C:2012, ISO 26262, IEC 62304
+ * This header delegates to L1 (libaxilog) for all arithmetic
+ * type definitions. L2 SHALL NOT define independent constants.
  *
- * @author William Murray
- * @copyright Copyright (c) 2026 The Murray Family Innovation Trust. All rights reserved.
- * @license Licensed under the GPL-3.0 (Open Source) or Commercial License.
- *          For commercial licensing: william@fstopify.com
- *
- * @note No floating-point types used in runtime operations. Conversion
- *       functions provided only for initialization and debugging.
+ * @traceability SRS-005-SHALL-001, SRS-005-SHALL-002
  */
 
-#ifndef FIXED_POINT_H
-#define FIXED_POINT_H
+#ifndef CERTIFIABLE_INFERENCE_FIXED_POINT_H
+#define CERTIFIABLE_INFERENCE_FIXED_POINT_H
 
-#include <stdint.h>
+#include <axilog/types.h>
+
+/* ========================================================================
+ * L2 Legacy Type Aliases — Delegate to L1
+ * ======================================================================== */
+
+typedef q16_16_t fixed_t;
+
+#define FIXED_SHIFT   Q16_SHIFT
+#define FIXED_ONE     Q16_ONE
+#define FIXED_HALF    Q16_HALF
+#define FIXED_MAX     Q16_MAX
+#define FIXED_MIN     Q16_MIN
+#define FIXED_ZERO    0
+
+/* ========================================================================
+ * Conversion Functions
+ * ======================================================================== */
 
 /**
- * @brief Fixed-point type definition (Q16.16 format).
+ * @brief Convert integer to Q16.16 fixed-point.
  *
- * @details Signed 32-bit integer where upper 16 bits represent the integer
- * part and lower 16 bits represent the fractional part.
- *
- * Range: -32768.0 to +32767.99998
- * Precision: 0.000015 (1/65536)
+ * SRS-005-SHALL-005: Integer-to-Q16.16 conversion
+ * SRS-005-SHALL-068: No signed shift — uses multiplication
  */
-typedef int32_t fixed_t;
-
-/** @brief Number of fractional bits in Q16.16 format */
-#define FIXED_SHIFT 16
-
-/** @brief Fixed-point representation of 1.0 */
-#define FIXED_ONE   (1 << FIXED_SHIFT)
-
-/** @brief Fixed-point representation of 0.5 (for rounding) */
-#define FIXED_HALF  (1 << (FIXED_SHIFT - 1))
-
-/** @brief Fixed-point representation of 0 */
-#define FIXED_ZERO  (0)
-
-/** @brief Maximum positive value representable in Q16.16 */
-#define FIXED_MAX   (INT32_MAX)
-
-/** @brief Maximum negative value representable in Q16.16 */
-#define FIXED_MIN   (INT32_MIN)
-
-/**
- * @brief Convert integer to fixed-point.
- *
- * @param[in] i Integer value
- * @return Fixed-point representation
- *
- * @complexity O(1)
- * @determinism Bit-perfect
- */
-static inline fixed_t fixed_from_int(int32_t i) {
-    /* Avoid undefined behavior when shifting negative values */
-    if (i >= 0) {
-        return (fixed_t)(i << FIXED_SHIFT);
-    } else {
-        return (fixed_t)(-((-i) << FIXED_SHIFT));
-    }
+static inline fixed_t fixed_from_int(int32_t i)
+{
+    return (fixed_t)(i * FIXED_ONE);
 }
 
 /**
- * @brief Convert fixed-point to integer (truncate).
+ * @brief Convert Q16.16 fixed-point to integer (truncation toward zero).
  *
- * @param[in] f Fixed-point value
- * @return Integer part (fractional part discarded)
- *
- * @complexity O(1)
- * @determinism Bit-perfect
+ * SRS-005-SHALL-006: Q16.16-to-integer conversion
+ * SRS-005-SHALL-068: No signed shift — uses division
  */
-static inline int32_t fixed_to_int(fixed_t f) {
-    return f >> FIXED_SHIFT;
+static inline int32_t fixed_to_int(fixed_t f)
+{
+    return f / FIXED_ONE;
 }
 
 /**
@@ -92,14 +64,9 @@ static inline int32_t fixed_to_int(fixed_t f) {
  *
  * @warning Only use during initialization or model loading, not in
  *          inference runtime. Floating-point operations are non-deterministic.
- *
- * @param[in] fl Float value
- * @return Fixed-point representation
- *
- * @complexity O(1)
- * @determinism No (uses floating-point)
  */
-static inline fixed_t fixed_from_float(float fl) {
+static inline fixed_t fixed_from_float(float fl)
+{
     return (fixed_t)(fl * FIXED_ONE);
 }
 
@@ -107,123 +74,84 @@ static inline fixed_t fixed_from_float(float fl) {
  * @brief Convert fixed-point to float.
  *
  * @warning Only use for debugging or logging, not in inference runtime.
- *          Floating-point operations are non-deterministic.
- *
- * @param[in] f Fixed-point value
- * @return Float representation
- *
- * @complexity O(1)
- * @determinism No (produces floating-point)
  */
-static inline float fixed_to_float(fixed_t f) {
+static inline float fixed_to_float(fixed_t f)
+{
     return (float)f / FIXED_ONE;
 }
+
+/* ========================================================================
+ * Basic Arithmetic
+ * ======================================================================== */
 
 /**
  * @brief Fixed-point addition.
  *
- * @param[in] a First operand
- * @param[in] b Second operand
- * @return Sum a + b
- *
- * @pre No overflow occurs (caller responsible for range checking)
- * @post Returns exact sum
- *
- * @complexity O(1)
- * @determinism Bit-perfect across all platforms
- *
- * @note No overflow detection. For safety-critical use, check ranges
- *       before operation or use saturating arithmetic variant.
+ * SRS-005-SHALL-010: Saturated addition (saturation deferred to Phase 3)
  */
-static inline fixed_t fixed_add(fixed_t a, fixed_t b) {
+static inline fixed_t fixed_add(fixed_t a, fixed_t b)
+{
     return a + b;
 }
 
 /**
  * @brief Fixed-point subtraction.
  *
- * @param[in] a First operand (minuend)
- * @param[in] b Second operand (subtrahend)
- * @return Difference a - b
- *
- * @pre No overflow occurs (caller responsible for range checking)
- * @post Returns exact difference
- *
- * @complexity O(1)
- * @determinism Bit-perfect across all platforms
+ * SRS-005-SHALL-011: Saturated subtraction (saturation deferred to Phase 3)
  */
-static inline fixed_t fixed_sub(fixed_t a, fixed_t b) {
+static inline fixed_t fixed_sub(fixed_t a, fixed_t b)
+{
     return a - b;
 }
 
 /**
- * @brief Deterministic fixed-point multiplication with rounding.
+ * @brief Fixed-point absolute value with INT32_MIN saturation.
  *
- * @details Uses 64-bit intermediate to prevent overflow during calculation.
- * Adds FIXED_HALF before shifting to implement proper rounding, reducing
- * cumulative error in deep neural networks.
- *
- * @param[in] a First operand
- * @param[in] b Second operand
- * @return Product a * b with rounding
- *
- * @pre Result fits in fixed_t range (caller responsible for checking)
- * @post Returns rounded product
- *
- * @complexity O(1)
- * @determinism Bit-perfect across all platforms
- *
- * @traceability SRS-003-DETERMINISTIC-MATH
+ * SRS-005-SHALL-015: Absolute value
+ * SRS-005-SHALL-069: INT32_MIN overflow handled
  */
-fixed_t fixed_mul(fixed_t a, fixed_t b);
-
-/**
- * @brief Deterministic fixed-point division.
- *
- * @details Shifts dividend left before division to maintain precision.
- * Returns 0 for division by zero (safe failure mode).
- *
- * @param[in] a Dividend
- * @param[in] b Divisor
- * @return Quotient a / b, or 0 if b == 0
- *
- * @pre b != 0 for valid result
- * @post Returns quotient or 0 if division by zero
- *
- * @complexity O(1)
- * @determinism Bit-perfect across all platforms
- *
- * @note Division by zero returns 0 rather than undefined behavior.
- *       For safety-critical use, caller should check divisor before calling.
- *
- * @traceability SRS-003-DETERMINISTIC-MATH
- */
-fixed_t fixed_div(fixed_t a, fixed_t b);
-
-/**
- * @brief Fixed-point absolute value.
- *
- * @param[in] f Input value
- * @return Absolute value |f|
- *
- * @complexity O(1)
- * @determinism Bit-perfect
- */
-static inline fixed_t fixed_abs(fixed_t f) {
+static inline fixed_t fixed_abs(fixed_t f)
+{
+    if (f == INT32_MIN) {
+        return INT32_MAX;  /* Saturate — fault signalling deferred to Phase 3 */
+    }
     return (f < 0) ? -f : f;
 }
 
 /**
- * @brief Fixed-point negation.
+ * @brief Fixed-point negation with INT32_MIN saturation.
  *
- * @param[in] f Input value
- * @return Negated value -f
- *
- * @complexity O(1)
- * @determinism Bit-perfect
+ * SRS-005-SHALL-014: Negation
+ * SRS-005-SHALL-069: INT32_MIN overflow handled
  */
-static inline fixed_t fixed_neg(fixed_t f) {
+static inline fixed_t fixed_neg(fixed_t f)
+{
+    if (f == INT32_MIN) {
+        return INT32_MAX;  /* Saturate — fault signalling deferred to Phase 3 */
+    }
     return -f;
 }
 
-#endif /* FIXED_POINT_H */
+/* ========================================================================
+ * Complex Arithmetic (implemented in fixed_point.c)
+ * ======================================================================== */
+
+/**
+ * @brief Saturated Q16.16 multiplication (truncation toward zero).
+ *
+ * SRS-005-SHALL-012: Saturated multiplication
+ * SRS-005-SHALL-067: Truncation mandated (no rounding)
+ * SRS-005-SHALL-068: No signed shift
+ */
+fixed_t fixed_mul(fixed_t a, fixed_t b);
+
+/**
+ * @brief Saturated Q16.16 division.
+ *
+ * SRS-005-SHALL-013: Saturated division
+ * SRS-005-SHALL-068: No signed shift
+ * SRS-005-SHALL-069: INT32_MIN/-1 handled
+ */
+fixed_t fixed_div(fixed_t a, fixed_t b);
+
+#endif /* CERTIFIABLE_INFERENCE_FIXED_POINT_H */
