@@ -49,3 +49,4 @@
 /unit/certifiable_inference_test_hash_consistency
 /unit/certifiable_inference_test_matrix_reproducibility
 /unit/certifiable_inference_test_pooling
+/unit/certifiable_inference_test_srs005_compliance
