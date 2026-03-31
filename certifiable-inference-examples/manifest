@@ -4,7 +4,7 @@ version: 0.1.0-a.0.z
 language: c
 project: certifiable-inference
 summary: Certifiable inference engine with deterministic behavior
-license: other: proprietary
+license: AGPL-3.0-or-later
 description-file: README.md
 url: https://github.com/SpeyTech/certifiable-inference
 package-url: https://github.com/SpeyTech/certifiable-inference/certifiable-inference-examples
