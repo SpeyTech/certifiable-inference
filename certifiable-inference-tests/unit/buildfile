@@ -1,0 +1,29 @@
+import ci = certifiable-inference%liba{certifiable-inference}
+
+tests = exe{ \
+  certifiable_inference_test_activations \
+  certifiable_inference_test_convolution \
+  certifiable_inference_test_fixed_point \
+  certifiable_inference_test_hash_basic \
+  certifiable_inference_test_hash_consistency \
+  certifiable_inference_test_matrix_reproducibility \
+  certifiable_inference_test_pooling \
+  certifiable_inference_test_srs005_compliance \
+  }
+
+exe{certifiable_inference_test_activations}: c{test_activations} $ci
+exe{certifiable_inference_test_convolution}: c{test_convolution} $ci
+exe{certifiable_inference_test_fixed_point}: c{test_fixed_point} $ci
+exe{certifiable_inference_test_hash_basic}:  c{test_hash_basic} $ci
+exe{certifiable_inference_test_hash_consistency}: c{test_hash_consistency} $ci
+exe{certifiable_inference_test_matrix_reproducibility}: c{test_matrix_reproducibility} $ci
+exe{certifiable_inference_test_pooling}: c{test_pooling} $ci
+exe{certifiable_inference_test_srs005_compliance}: c{test_srs005_compliance.c} $ci
+
+$tests:
+{
+  c.coptions += -UNDEBUG
+  test = true
+}
+
+./: $tests

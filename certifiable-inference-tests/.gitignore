@@ -1,0 +1,52 @@
+# Build artifacts
+/build-*/
+/build_*/
+/build/bootstrap/
+.bdep/
+.bpkg/
+
+# Local default options files.
+#
+.build2/local/
+
+# Compiler/linker output.
+#
+*.d
+*.t
+*.i
+*.i.*
+*.ii
+*.ii.*
+*.o
+*.obj
+*.gcm
+*.pcm
+*.ifc
+*.so
+*.dylib
+*.dll
+*.a
+*.lib
+*.exp
+*.pdb
+*.ilk
+*.exe
+*.exe.dlls/
+*.exe.manifest
+*.pc
+
+# Test outputs
+/static/*.txt
+/benchmarks/results/
+
+
+# Build2 symlinks exes from build dir to src dir for convenient
+/benchmarks/certifiable_inference_test_timing_consistency
+/unit/certifiable_inference_test_activations
+/unit/certifiable_inference_test_convolution
+/unit/certifiable_inference_test_fixed_point
+/unit/certifiable_inference_test_hash_basic
+/unit/certifiable_inference_test_hash_consistency
+/unit/certifiable_inference_test_matrix_reproducibility
+/unit/certifiable_inference_test_pooling
+/unit/certifiable_inference_test_srs005_compliance

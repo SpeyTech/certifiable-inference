@@ -1,0 +1,5 @@
+*.config.build
+*.config.build.save
+*.variables.build
+
+.DS_Store

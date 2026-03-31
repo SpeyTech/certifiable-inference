@@ -287,8 +287,8 @@ void test_random_torture(void) {
 
     for (int i = 0; i < 1000; i++) {
         /* Generate random values in safe range [-100, 100] */
-        float f_a = ((float)rand() / RAND_MAX) * 200.0f - 100.0f;
-        float f_b = ((float)rand() / RAND_MAX) * 200.0f - 100.0f;
+        float f_a = ((float)((double)rand() / (double)RAND_MAX)) * 200.0f - 100.0f;
+        float f_b = ((float)((double)rand() / (double)RAND_MAX)) * 200.0f - 100.0f;
 
         fixed_t a = fixed_from_float(f_a);
         fixed_t b = fixed_from_float(f_b);

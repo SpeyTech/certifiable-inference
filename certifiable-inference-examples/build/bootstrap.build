@@ -1,0 +1,7 @@
+project = certifiable-inference-examples
+
+using version
+using config
+using test
+using install
+using dist

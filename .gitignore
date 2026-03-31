@@ -1,5 +1,13 @@
 # Build artifacts
-build/
+/build-*/
+/build_*/
+/build/bootstrap/
+/.bdep/
+.bpkg/
+
+**/*.config.build
+**/*.config.build.save
+
 *.o
 *.a
 *.so
@@ -16,10 +24,6 @@ build/
 # OS files
 .DS_Store
 Thumbs.db
-
-# Test outputs
-tests/static/*.txt
-tests/benchmarks/results/
 
 # Temporary files
 *.tmp

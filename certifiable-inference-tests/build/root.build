@@ -1,0 +1,20 @@
+# Uncomment to suppress warnings coming from external libraries.
+#
+#c.internal.scope = current
+
+using c
+
+c.std = c99
+c.warnings = all
+c.coptions += -Werror -pedantic -Wno-unused-parameter
+
+if ($c.target.class == 'windows')
+  fail "certifiable-inference does not support Windows"
+
+if ($c.id == 'gcc')
+  c.coptions += -fanalyzer
+
+h{*}: extension = h
+c{*}: extension = c
+
+exe{*}: test = true

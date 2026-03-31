@@ -1,0 +1,11 @@
+import ci = certifiable-inference%liba{certifiable-inference}
+
+bench = exe{certifiable_inference_test_timing_consistency}
+
+$bench: c{test_timing_consistency} $ci
+{
+  c.libs += -lm
+  test = true
+}
+
+./: $bench

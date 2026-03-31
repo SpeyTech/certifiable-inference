@@ -1,0 +1,23 @@
+intf_libs = # Interface dependencies.
+#import xxxx_libs += libhello%lib{hello}
+
+lib{certifiable-training}: h{**} $intf_libs
+
+# Export options.
+#
+out_pfx = [dir_path] $out_root/include/
+src_pfx = [dir_path] $src_root/include/
+
+lib{certifiable-training}:
+{
+  c.export.poptions = "-I$out_pfx" "-I$src_pfx"
+  c.export.libs = $intf_libs
+}
+
+# Install recreating subdirectories.
+#
+h{*}:
+{
+  install         = include/certifiable-inference/
+  install.subdirs = true
+}
