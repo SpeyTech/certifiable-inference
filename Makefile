@@ -21,7 +21,7 @@ export BUILD_DIR
 export BUILD_TYPE
 export PREFIX
 
-.PHONY: all help setup start-tt config build test install package release clean
+.PHONY: all help setup start-tt config build test install package release update-build clean
 
 all: config build test
 
@@ -54,6 +54,12 @@ release: ## Publish release artifacts
 	$(SCRIPTS_DIR)/release.sh
 
 ##@ Maintenance
+update-build: ## Update certifiable-build git subtree
+	git subtree pull --prefix=certifiable-build \
+		https://github.com/SpeyTech/certifiable-build master \
+		-m "Update certifiable-build git subtree." \
+		--squash
+
 clean: ## Remove all build artifacts
 	$(SCRIPTS_DIR)/clean.sh
 
