@@ -1,5 +1,5 @@
 #!/bin/sh
-set -eux
+set -eu
 
 usage() {
   code=${1:-1}
